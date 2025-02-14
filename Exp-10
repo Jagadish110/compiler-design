@@ -1,0 +1,69 @@
+#include <stdio.h>
+#include <ctype.h>
+#include <string.h>
+
+char input[100];  // Input string
+int pos = 0;      // Current position in the input
+
+void E();
+void T();
+void F();
+
+void error() {
+    printf("Error in parsing at position %d\n", pos);
+}
+
+void match(char expected) {
+    if (input[pos] == expected) {
+        pos++;
+    } else {
+        error();
+    }
+}
+-
+// E ? T + E | T
+void E() {
+    T();
+    while (input[pos] == '+') {
+        match('+');
+        T();
+    }
+}
+
+// T ? F * T | F
+void T() {
+    F();
+    while (input[pos] == '*') {
+        match('*');
+        F();
+    }
+}
+
+// F ? (E) | id
+void F() {
+    if (input[pos] == '(') {
+        match('(');
+        E();
+        match(')');
+    } else if (isalnum(input[pos])) {  // Identifier (id)
+        pos++;
+    } else {
+        error();
+    }
+}
+
+int main() {
+    printf("Enter an expression: ");
+    scanf("%s", input);
+
+    E();  // Start parsing from E (Expression)
+
+    // If parsing was successful and we consumed the entire input
+    if (input[pos] == '\0') {
+        printf("Parsing successful!\n");
+    } else {
+        printf("Parsing failed!\n");
+    }
+
+    return 0;
+}
