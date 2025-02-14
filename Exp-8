@@ -1,0 +1,37 @@
+#include <stdio.h>
+
+void lexicalAnalyzer(FILE *file) {
+    char ch;
+    int whitespaceCount = 0, newlineCount = 0;
+
+    while ((ch = fgetc(file)) != EOF) {
+        if (ch == ' ' || ch == '\t') {
+            whitespaceCount++;  // Count spaces and tabs
+        }
+        if (ch == '\n') {
+            newlineCount++;  // Count newline characters
+        }
+    }
+
+    printf("Total Whitespaces: %d\n", whitespaceCount);
+    printf("Total Newlines: %d\n", newlineCount);
+}
+
+int main() {
+    char filename[100];
+    FILE *file;
+
+    printf("Enter the filename: ");
+    scanf("%s", filename);
+
+    file = fopen(filename, "r");  // Open file in read mode
+    if (file == NULL) {
+        printf("Error: File not found!\n");
+        return 1;
+    }
+
+    lexicalAnalyzer(file);  // Process the file
+
+    fclose(file);  // Close the file
+    return 0;
+}
